@@ -26,6 +26,7 @@ export class inputController {
     }
 
     enableAction(actionName) {
+        const activate = document.getElementById("activate_place");
         const input = document.getElementById("input1");
 
         input.addEventListener("focusin", (event) => {
@@ -33,16 +34,21 @@ export class inputController {
         });
 
         console.log(actionName.code);
+        input.placeholder = actionName.code;
+        activate.placeholder = "Activ button: on"
     }
 
     disableAction(actionName) {
         const input = document.getElementById("input1");
+        const activate = document.getElementById("activate_place");
 
         input.addEventListener("focusout", (event) => {
             event.target.style.background = "white"
         });
 
         console.log(actionName.code);
+        input.placeholder = actionName.code;
+        activate.placeholder = "Activ button: off"
     }
 
     attach(target, dontEnable) {
