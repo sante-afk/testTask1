@@ -3,18 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
     <title>Document</title>
 </head>
 <body>
     <canvas></canvas>
-    <input id="activate_place" type="text">
+    <div class="container">
+        <input id="activate_place" type="text">
+        <input id="input1" type="text">
+    </div>
 
-    <input id="input1" type="text">
+    <div class="button">
+        <button id="btnAdd">Добавить прослушку</button>
+        <button id="btnRemove">Убрать прослушку</button>
+    </div>
+
     <script type="module">
         import { inputController } from "./input-controller.js"
         const controller = new inputController();
+        
+        document.getElementById("input1", controller.isKeyPressed());
+        document.getElementById("btnAdd", controller.attach());
+        document.getElementById("btnRemove", controller.detach());
 
-        const inputId = document.getElementById("input1", controller.isKeyPressed());
     </script>
+
+    
 </body>
 </html>

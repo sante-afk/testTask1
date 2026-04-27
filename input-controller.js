@@ -51,12 +51,26 @@ export class inputController {
         activate.placeholder = "Activ button: off"
     }
 
-    attach(target, dontEnable) {
+    attach(target) {
+        const buttonAdd = document.getElementById("btnAdd");
 
+        buttonAdd.addEventListener("click", (event) => {
+            this.enableAction(event);
+        });
     }
 
     detach() {
-        
+        const buttonRemove = document.getElementById("btnRemove");
+        const input = document.getElementById("input1");
+        const activate = document.getElementById("activate_place");
+
+        buttonRemove.addEventListener("click", (event) => {
+            input.placeholder = "";
+            activate.placeholder = "";
+
+            this.disableAction(event);
+        });
+
     }
 
     isActionActive(action) {
@@ -64,16 +78,21 @@ export class inputController {
     }
 
     isKeyPressed(keyCode) {
-        document.addEventListener("keydown", (keyCode) => {
-            this.ACTION_ACTIVATED = true;
-            console.log("Button activated: " + this.ACTION_ACTIVATED);
-            this.enableAction(keyCode);
-        });
-        document.addEventListener("keyup", (keyCode) => {
-            this.ACTION_ACTIVATED = false;
-            console.log("Button diactivated: " + this.ACTION_ACTIVATED);
-            this.disableAction(keyCode);
-        })
+        try {
+            document.addEventListener("keydown", (keyCode) => {
+                this.ACTION_ACTIVATED = true;
+                console.log("Button activated: " + this.ACTION_ACTIVATED);
+                this.enableAction(keyCode);
+            });
+            document.addEventListener("keyup", (keyCode) => {
+                this.ACTION_ACTIVATED = false;
+                console.log("Button diactivated: " + this.ACTION_ACTIVATED);
+                this.disableAction(keyCode);
+            })
+        } catch {
+
+        }
+        
         return Boolean;
     }
 
