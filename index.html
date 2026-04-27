@@ -7,6 +7,13 @@
 </head>
 <body>
     <canvas></canvas>
-    <script src="/input-controller.js"></script>
+    <input type="Enter to text..." id="input1">
+    <script type="module">
+        import { inputController } from "./input-controller.js"
+        const controller = new inputController();
+
+        const inputId = document.getElementById("input1", controller.isKeyPressed());
+        
+    </script>
 </body>
 </html>
