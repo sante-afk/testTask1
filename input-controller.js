@@ -1,14 +1,14 @@
 export class inputController {
     constructor() {
         this.ACTION;
-        this.ACTION_ACTIVATED = "";
+        this.ACTION_ACTIVATED;
+        this.ACTION_DEACTIVATED;
         this.ACTION_LISTENER = false;
     }
 
     bindAction(actionsToBind) {
         try {
-            this.ACTION_ACTIVATED = actionsToBind.type;
-            this.attach(this.ACTION_ACTIVATED);
+            
         } catch {
 
         }
@@ -59,7 +59,8 @@ export class inputController {
     attach(target) {
         const buttonAdd = document.getElementById("btnAdd");
         const input = document.getElementById("input1");
-        input.dispatchEvent(target);
+        const newEvent = new Event("input-controller:action-activated");
+        target.dispatchEvent(newEvent, {bubbles: true});
 
         document.addEventListener("keydown", (action) => {
             this.ACTION_LISTENER = true;
@@ -73,10 +74,27 @@ export class inputController {
                     this.enableAction(action);
                     this.isKeyPressed(action);
                 }
-                
             } 
         });
 
+        if (!target) {
+            this.detach();
+        };
+
+        buttonAdd.addEventListener("click", (event) => {
+            this.ACTION_LISTENER = true;
+            this.enableAction(input);
+        });
+
+    }
+
+    detach() {
+        const buttonRemove = document.getElementById("btnRemove");
+        const input = document.getElementById("input1");
+        const activate = document.getElementById("activate_place");
+        const newEvent = new Event("input-controller:action-deactivated");
+        target.dispatchEvent(newEvent, {bubbles: true});
+        
         document.addEventListener("keyup", (action) => {
             this.ACTION_LISTENER = false;
             console.log("Button diactivated: " + this.ACTION_LISTENER);
@@ -92,18 +110,6 @@ export class inputController {
                 
             }
         });
-
-        buttonAdd.addEventListener("click", (event) => {
-            this.ACTION_LISTENER = true;
-            this.enableAction(input);
-        });
-
-    }
-
-    detach() {
-        const buttonRemove = document.getElementById("btnRemove");
-        const input = document.getElementById("input1");
-        const activate = document.getElementById("activate_place");
 
         buttonRemove.addEventListener("click", (event) => {
             this.ACTION_LISTENER = false;
