@@ -20,10 +20,13 @@
 
     <script type="module">
         import { inputController } from "./input-controller.js"
+        const input = document.getElementById("input1");
         const controller = new inputController();
         
-        document.getElementById("input1", controller.bindAction());
 
+        input.addEventListener('click', (event) => {
+            controller.bindAction(event);
+        })
         // document.getElementById("btnAdd", controller.attach());
         // document.getElementById("btnRemove", controller.detach());
     </script>
