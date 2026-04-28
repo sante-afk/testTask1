@@ -1,23 +1,45 @@
 export class inputController {
-    constructor(ACTION_LEFT, ACTION_RIGHT, ACTION_UP, ACTION_DOWN) {
-        this.ACTION_LEFT = ACTION_LEFT;
-        this.ACTION_RIGHT = ACTION_RIGHT;
-        this.ACTION_UP = ACTION_UP;
-        this.ACTION_DOWN = ACTION_DOWN;
-
+    constructor() {
+        this.ACTION;
         this.ACTION_ACTIVATED = false;
         this.ACTION_LISTENER = false;
     }
 
     bindAction(actionsToBind) {
-        if (actionsToBind.keyCode === 37 || actionsToBind.keyCode === 65) {
-            this.ACTION_LEFT = actionsToBind.keyCode;
-        } else if (actionsToBind.keyCode === 39 || actionsToBind.keyCode === 68) {
-            this.ACTION_RIGHT = actionsToBind.keyCode;
-        } else if (actionsToBind.keyCode === 38 || actionsToBind.keyCode === 87) {
-            this.ACTION_UP = actionsToBind.keyCode;
-        } else if (actionsToBind.keyCode === 40 || actionsToBind.keyCode === 83) {
-            this.ACTION_DOWN = actionsToBind.keyCode;
+        try {
+            document.addEventListener("keydown", (action) => {
+                 this.ACTION_ACTIVATED = true;
+                console.log("Button activated: " + this.ACTION_ACTIVATED);
+
+                if (action.keyCode) {
+                    this.ACTION = action;
+                    
+                    const actionActive = this.isActionActive(action);
+                    if (actionActive) {
+                        this.enableAction(action);
+                        this.isKeyPressed(action);
+                    }
+                    
+                } 
+            });
+
+            document.addEventListener("keyup", (action) => {
+                this.ACTION_ACTIVATED = false;
+                console.log("Button diactivated: " + this.ACTION_ACTIVATED);
+
+                if (action.keyCode) {
+                    this.ACTION = action;
+
+                    const actionActive = this.isActionActive(action);
+                    if (!actionActive) {
+                        this.disableAction(action);
+                        this.isKeyPressed(action);
+                    }
+                    
+                }
+            });
+        } catch {
+
         }
        
     }
@@ -26,19 +48,23 @@ export class inputController {
         const activate = document.getElementById("activate_place");
         const input = document.getElementById("input1");
 
-        input.addEventListener("focusin", (event) => {
-            event.target.style.background = "black"
-        });
+        const actionAccets = this.ACTION_ACTIVATED;
 
-        console.log(actionName.code);
-        if (!actionName.code) {
-            input.placeholder = "press < ^ > and (wasd) ";
-            activate.placeholder = "Activ button: off"
-        } else {
-            this.bindAction(actionName);
-            input.placeholder = actionName.code;
-            activate.placeholder = "Activ button: on"
+        if (actionAccets) {
+            input.addEventListener("focusin", (event) => {
+                event.target.style.background = "black"
+            });
+
+            console.log(actionName.code);
+            if (!actionName.code) {
+                input.placeholder = "press < ^ > and (wasd) ";
+                activate.placeholder = "Activ button: off"
+            } else {
+                input.placeholder = actionName.code;
+                activate.placeholder = "Activ button: on"
+            }
         }
+       
     }
 
     disableAction(actionName) {
@@ -49,9 +75,14 @@ export class inputController {
             event.target.style.background = "white"
         });
 
-        console.log(actionName.code);
-        input.placeholder = actionName.code;
-        activate.placeholder = "Activ button: off"
+        const actionAccets = this.ACTION_ACTIVATED;
+
+        if (!actionAccets) {
+            console.log(actionName.code);
+            input.placeholder = actionName.code;
+            activate.placeholder = "Activ button: off"
+        }
+        
     }
 
     attach(target) {
@@ -60,8 +91,7 @@ export class inputController {
 
         buttonAdd.addEventListener("click", (event) => {
             this.ACTION_LISTENER = true;
-            this.isKeyPressed(input);
-            this.enableAction(event);
+            this.enableAction(input);
         });
     }
 
@@ -72,8 +102,8 @@ export class inputController {
 
         buttonRemove.addEventListener("click", (event) => {
             this.ACTION_LISTENER = false;
-            document.removeEventListener("keydown", this.isKeyPressed(input));
-            document.removeEventListener("keyup", this.isKeyPressed(input));
+            document.removeEventListener("keydown", this.disableAction(input));
+            document.removeEventListener("keyup", this.disableAction(input));
 
             input.placeholder = "";
             activate.placeholder = "";
@@ -82,28 +112,22 @@ export class inputController {
     }
 
     isActionActive(action) {
-        return Boolean;
+        return action.type === "keydown" ? this.ACTION_ACTIVATED = true : this.ACTION_ACTIVATED = false;
     }
 
     isKeyPressed(keyCode) {
         try {
-            if (keyCode) {
-                document.addEventListener("keydown", (keyCode) => {
-                    this.ACTION_ACTIVATED = true;
-                    console.log("Button activated: " + this.ACTION_ACTIVATED);
-                    this.enableAction(keyCode);
-                });
-                document.addEventListener("keyup", (keyCode) => {
-                    this.ACTION_ACTIVATED = false;
-                    console.log("Button diactivated: " + this.ACTION_ACTIVATED);
-                    this.disableAction(keyCode);
-                });
+            if (keyCode.type === "keydown") {
+                this.ACTION_ACTIVATED = true;
+                return true;
+            } 
+            if (keyCode.type === "keyup") {
+                this.ACTION_ACTIVATED = false;
+                return false;
             }
         } catch {
-            alert("Error: keyCode undefined");
         }
-        
-        return Boolean;
+        return false;
     }
 
 
