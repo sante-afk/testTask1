@@ -1,43 +1,14 @@
 export class inputController {
     constructor() {
         this.ACTION;
-        this.ACTION_ACTIVATED = false;
+        this.ACTION_ACTIVATED = "";
         this.ACTION_LISTENER = false;
     }
 
     bindAction(actionsToBind) {
         try {
-            document.addEventListener("keydown", (action) => {
-                 this.ACTION_ACTIVATED = true;
-                console.log("Button activated: " + this.ACTION_ACTIVATED);
-
-                if (action.keyCode) {
-                    this.ACTION = action;
-                    
-                    const actionActive = this.isActionActive(action);
-                    if (actionActive) {
-                        this.enableAction(action);
-                        this.isKeyPressed(action);
-                    }
-                    
-                } 
-            });
-
-            document.addEventListener("keyup", (action) => {
-                this.ACTION_ACTIVATED = false;
-                console.log("Button diactivated: " + this.ACTION_ACTIVATED);
-
-                if (action.keyCode) {
-                    this.ACTION = action;
-
-                    const actionActive = this.isActionActive(action);
-                    if (!actionActive) {
-                        this.disableAction(action);
-                        this.isKeyPressed(action);
-                    }
-                    
-                }
-            });
+            this.ACTION_ACTIVATED = actionsToBind.type;
+            this.attach(this.ACTION_ACTIVATED);
         } catch {
 
         }
@@ -48,7 +19,7 @@ export class inputController {
         const activate = document.getElementById("activate_place");
         const input = document.getElementById("input1");
 
-        const actionAccets = this.ACTION_ACTIVATED;
+        const actionAccets = this.ACTION_LISTENER;
 
         if (actionAccets) {
             input.addEventListener("focusin", (event) => {
@@ -75,7 +46,7 @@ export class inputController {
             event.target.style.background = "white"
         });
 
-        const actionAccets = this.ACTION_ACTIVATED;
+        const actionAccets = this.ACTION_LISTENER;
 
         if (!actionAccets) {
             console.log(actionName.code);
@@ -88,11 +59,45 @@ export class inputController {
     attach(target) {
         const buttonAdd = document.getElementById("btnAdd");
         const input = document.getElementById("input1");
+        input.dispatchEvent(target);
+
+        document.addEventListener("keydown", (action) => {
+            this.ACTION_LISTENER = true;
+            console.log("Button activated: " + this.ACTION_LISTENER);
+
+            if (action.keyCode) {
+                this.ACTION = action;
+                
+                const actionActive = this.isActionActive(action);
+                if (actionActive) {
+                    this.enableAction(action);
+                    this.isKeyPressed(action);
+                }
+                
+            } 
+        });
+
+        document.addEventListener("keyup", (action) => {
+            this.ACTION_LISTENER = false;
+            console.log("Button diactivated: " + this.ACTION_LISTENER);
+
+            if (action.keyCode) {
+                this.ACTION = action;
+
+                const actionActive = this.isActionActive(action);
+                if (!actionActive) {
+                    this.disableAction(action);
+                    this.isKeyPressed(action);
+                }
+                
+            }
+        });
 
         buttonAdd.addEventListener("click", (event) => {
             this.ACTION_LISTENER = true;
             this.enableAction(input);
         });
+
     }
 
     detach() {
@@ -112,17 +117,17 @@ export class inputController {
     }
 
     isActionActive(action) {
-        return action.type === "keydown" ? this.ACTION_ACTIVATED = true : this.ACTION_ACTIVATED = false;
+        return action.type === "keydown" ? this.ACTION_LISTENER = true : this.ACTION_LISTENER = false;
     }
 
     isKeyPressed(keyCode) {
         try {
             if (keyCode.type === "keydown") {
-                this.ACTION_ACTIVATED = true;
+                this.ACTION_LISTENER = true;
                 return true;
             } 
             if (keyCode.type === "keyup") {
-                this.ACTION_ACTIVATED = false;
+                this.ACTION_LISTENER = false;
                 return false;
             }
         } catch {
