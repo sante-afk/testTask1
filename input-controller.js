@@ -1,6 +1,5 @@
 export class inputController {
 
-
 static ACTION_ACTIVATED = "input-controller:action-activated";
 static ACTION_DEACTIVATED = "input-controller:action-deactivated";
 
