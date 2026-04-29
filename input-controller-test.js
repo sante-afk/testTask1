@@ -10,15 +10,8 @@ function init() {
         console.log('localhost = true');
     };
 
-
     const input = document.getElementById("input1");
     const controller = new inputController();
-
-    document.addEventListener("keydown", (action) => {
-        controller.bindAction(action);
-    });
-    document.addEventListener("keyup", (action) => {
-        controller.bindAction(action)
-    });
+    controller.attach();
 }
 
