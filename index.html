@@ -23,7 +23,13 @@
         const input = document.getElementById("input1");
         const controller = new inputController();
         
-        controller.attach(input);
+        document.addEventListener("keydown", (action) => {
+            controller.bindAction(action);
+        });
+        document.addEventListener("keyup", (action) => {
+            controller.bindAction(action)
+        });
+        
         // document.getElementById("btnAdd", controller.attach());
         // document.getElementById("btnRemove", controller.detach());
     </script>
