@@ -8,6 +8,6 @@ function init() {
     if (this.host) {
         console.log('localhost = true');
     }
-    
+
 }
 
