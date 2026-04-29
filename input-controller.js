@@ -8,7 +8,14 @@ export class inputController {
 
     bindAction(actionsToBind) {
         try {
-            
+            if (actionsToBind.type === "keydown") {
+                this.ACTION_DEACTIVATED = "";
+                this.ACTION_ACTIVATED = "input-controller:action-activated";
+            }
+            if (actionsToBind.type === "keyup") {
+                this.ACTION_ACTIVATED = "";
+                this.ACTION_DEACTIVATED = "input-controller:action-deactivated";
+            }
         } catch {
 
         }
@@ -59,10 +66,15 @@ export class inputController {
     attach(target) {
         const buttonAdd = document.getElementById("btnAdd");
         const input = document.getElementById("input1");
-        const newEvent = new Event("input-controller:action-activated");
-        target.dispatchEvent(newEvent, {bubbles: true});
+        const eventActivate = new Event("input-controller:action-activated");
+        const eventDeactivate = new Event("input-controller:action-activated");
+        
+        if (target) {
+            this.bindAction(target);
+        }
 
-        document.addEventListener("keydown", (action) => {
+        target.addEventListener("keydown", (action) => {
+            target.dispatchEvent(eventActivate, {bubbles: true});
             this.ACTION_LISTENER = true;
             console.log("Button activated: " + this.ACTION_LISTENER);
 
@@ -77,9 +89,22 @@ export class inputController {
             } 
         });
 
-        if (!target) {
+        target.addEventListener("keyup", (action) => {
+            target.dispatchEvent(eventDeactivate, {bubbles: true});
+            this.ACTION_LISTENER = false;
+            console.log("Button diactivated: " + this.ACTION_LISTENER);
+
+            if (action.keyCode) {
+                this.ACTION = action;
+
+                const actionActive = this.isActionActive(action);
+                if (!actionActive) {
+                    this.disableAction(action);
+                    this.isKeyPressed(action);
+                }
+            }
             this.detach();
-        };
+        });
 
         buttonAdd.addEventListener("click", (event) => {
             this.ACTION_LISTENER = true;
@@ -92,25 +117,7 @@ export class inputController {
         const buttonRemove = document.getElementById("btnRemove");
         const input = document.getElementById("input1");
         const activate = document.getElementById("activate_place");
-        const newEvent = new Event("input-controller:action-deactivated");
-        target.dispatchEvent(newEvent, {bubbles: true});
         
-        document.addEventListener("keyup", (action) => {
-            this.ACTION_LISTENER = false;
-            console.log("Button diactivated: " + this.ACTION_LISTENER);
-
-            if (action.keyCode) {
-                this.ACTION = action;
-
-                const actionActive = this.isActionActive(action);
-                if (!actionActive) {
-                    this.disableAction(action);
-                    this.isKeyPressed(action);
-                }
-                
-            }
-        });
-
         buttonRemove.addEventListener("click", (event) => {
             this.ACTION_LISTENER = false;
             document.removeEventListener("keydown", this.disableAction(input));
